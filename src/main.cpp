@@ -23,9 +23,9 @@ void setup_i2n(int sampleRate, int bitDepth, int i2sChannel) {
   };
   
   i2s_pin_config_t pin_config = {
-    .bck_io_num = 26, // BCLK-Pin
+    .bck_io_num = 18, // BCLK-Pin
     .ws_io_num = 25, // LRCLK-Pin
-    .data_out_num = 18, // Daten-Ausgangspins
+    .data_out_num = 26, // Daten-Ausgangspins
     .data_in_num = I2S_PIN_NO_CHANGE, // Daten-Eingangspins (kein Eingang)
   };
 
@@ -38,7 +38,7 @@ void setup() {
   setup_i2n(SAMPLERATE, 16, 0);
 
   int n = 0;
-  char p[] = "sineosc(asd, 55);";
+  char p[] = "x = wavetableosc(strangefour, $a1); y = wavetableosc(strangefour, $c1);";
   Token* tokens = tokenize(p, &n);
   si = createSlangInterpreter(tokens, n);
   interpret(si);
@@ -47,10 +47,11 @@ void setup() {
 }
 size_t bytes_written = 0;
 void loop() {
-  double* buf = renderBuffer(sbc);
+  float* buf = renderBuffer(sbc);
   for(int i = 0; i < BUFFERSIZE; i++) {
-    buf[i] *= 40000;
+    buf[i] *= 30000;
     audioBuffer[i] = buf[i];
+    //Serial.println(audioBuffer[i]);
   }
   i2s_write((i2s_port_t)0, audioBuffer, sizeof(uint16_t)*BUFFERSIZE, &bytes_written, portMAX_DELAY);
   free(buf);
