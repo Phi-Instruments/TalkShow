@@ -38,7 +38,7 @@ void setup() {
   setup_i2n(SAMPLERATE, 16, 0);
 
   int n = 0;
-  char p[] = "x = wavetableosc(strangefour, $a1); y = wavetableosc(strangefour, $c1);";
+  char p[] = "x = wavetableosc(strangeone, $a1); y = wavetableosc(strangeone, $c1);";
   Token* tokens = tokenize(p, &n);
   si = createSlangInterpreter(tokens, n);
   interpret(si);
@@ -49,7 +49,8 @@ size_t bytes_written = 0;
 void loop() {
   float* buf = renderBuffer(sbc);
   for(int i = 0; i < BUFFERSIZE; i++) {
-    buf[i] *= 30000;
+    buf[i] -= 0.2;
+    buf[i] *= 40000;
     audioBuffer[i] = buf[i];
     //Serial.println(audioBuffer[i]);
   }
